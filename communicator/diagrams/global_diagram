@@ -1,0 +1,343 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+class "communicator::src::app.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerWidget" <|-- "communicator::src::app.dart::MyApp"
+
+class "communicator::src::screens::main_screen.dart::MainScreen" {
+  +ConsumerState<MainScreen> createState()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerStatefulWidget" <|-- "communicator::src::screens::main_screen.dart::MainScreen"
+
+class "communicator::src::screens::main_screen.dart::_MainScreenState" {
+  -bool _firstBuildWasInitialized
+  -NavigationView _navigationView
+  -ChatView _chatView
+  +void initState()
+  +void dispose()
+  +void didChangeMetrics()
+  +void updateMainScreenState()
+  +Widget build()
+}
+
+"communicator::src::screens::main_screen.dart::_MainScreenState" o-- "communicator::src::views::navigation_view::navigation_view.dart::NavigationView"
+"communicator::src::screens::main_screen.dart::_MainScreenState" o-- "communicator::src::views::chat_view::chat_view.dart::ChatView"
+"flutter_riverpod::src::consumer.dart::ConsumerState" <|-- "communicator::src::screens::main_screen.dart::_MainScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "communicator::src::screens::main_screen.dart::_MainScreenState"
+
+class "communicator::src::views::chat_view::chat_view.dart::ChatView" {
+  +Thread? thread
+  +State<ChatView> createState()
+}
+
+"communicator::src::views::chat_view::chat_view.dart::ChatView" o-- "communicator::src::data_manager.dart::Thread"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "communicator::src::views::chat_view::chat_view.dart::ChatView"
+
+class "communicator::src::views::chat_view::chat_view.dart::_ChatViewState" {
+  +ChatBarWidget chatBarWidget
+  +ChatHistoryWidget chatHistoryWidget
+  +ChatInputPanelWidget chatInputPanelWidget
+  +void initState()
+  +Widget build()
+}
+
+"communicator::src::views::chat_view::chat_view.dart::_ChatViewState" o-- "communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget"
+"communicator::src::views::chat_view::chat_view.dart::_ChatViewState" o-- "communicator::src::views::chat_view::chat_history_widget.dart::ChatHistoryWidget"
+"communicator::src::views::chat_view::chat_view.dart::_ChatViewState" o-- "communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget"
+"flutter::src::widgets::framework.dart::State" <|-- "communicator::src::views::chat_view::chat_view.dart::_ChatViewState"
+
+class "communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget" {
+  +Thread thread
+  +Size preferredSize
+  +ConsumerState<ChatBarWidget> createState()
+}
+
+"communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget" o-- "communicator::src::data_manager.dart::Thread"
+"communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget" o-- "dart::ui::Size"
+"flutter_riverpod::src::consumer.dart::ConsumerStatefulWidget" <|-- "communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget"
+"flutter::src::widgets::preferred_size.dart::PreferredSizeWidget" <|-- "communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget"
+
+class "communicator::src::views::chat_view::chat_bar_widget.dart::_ChatBarWidgetState" {
+  -Contact? _contact
+  -List<StreamSubscription<dynamic>> _listeners
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"communicator::src::views::chat_view::chat_bar_widget.dart::_ChatBarWidgetState" o-- "communicator::src::data_manager.dart::Contact"
+"flutter_riverpod::src::consumer.dart::ConsumerState" <|-- "communicator::src::views::chat_view::chat_bar_widget.dart::_ChatBarWidgetState"
+
+class "communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget" {
+  +Thread thread
+  -TextEditingController _textEditingController
+  +Widget build()
+  -void _sendMessage()
+}
+
+"communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget" o-- "communicator::src::data_manager.dart::Thread"
+"communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget"
+
+class "communicator::src::views::chat_view::chat_history_widget.dart::ChatHistoryWidget" {
+  +Thread thread
+  +State<ChatHistoryWidget> createState()
+}
+
+"communicator::src::views::chat_view::chat_history_widget.dart::ChatHistoryWidget" o-- "communicator::src::data_manager.dart::Thread"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "communicator::src::views::chat_view::chat_history_widget.dart::ChatHistoryWidget"
+
+class "communicator::src::views::chat_view::chat_history_widget.dart::_ChatHistoryWidgetState" {
+  -List<Message> _messages
+  {static} -int _uploadedMessagesCountLimit
+  {static} -int _perUpdateMessageCount
+  -List<StreamSubscription<dynamic>> _listeners
+  -ScrollController _scrollController
+  -Offset _tapPosition
+  +void initState()
+  +void dispose()
+  -void _scrollListener()
+  -dynamic _uploadInitialMessages()
+  -void _cleanUpMessages()
+  -dynamic _uploadMessages()
+  -dynamic _updateListView()
+  +Widget build()
+  -Widget _chatBubble()
+  -void _showContextMenu()
+}
+
+"communicator::src::views::chat_view::chat_history_widget.dart::_ChatHistoryWidgetState" o-- "flutter::src::widgets::scroll_controller.dart::ScrollController"
+"communicator::src::views::chat_view::chat_history_widget.dart::_ChatHistoryWidgetState" o-- "dart::ui::Offset"
+"flutter::src::widgets::framework.dart::State" <|-- "communicator::src::views::chat_view::chat_history_widget.dart::_ChatHistoryWidgetState"
+
+class "communicator::src::views::add_contact_view.dart::AddContactView" {
+  +ConsumerState<AddContactView> createState()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerStatefulWidget" <|-- "communicator::src::views::add_contact_view.dart::AddContactView"
+
+class "communicator::src::views::add_contact_view.dart::_AddContactViewState" {
+  -String _name
+  -String _peerId
+  -String? _nameError
+  -String? _peerIdError
+  -void _cancel()
+  -void _add()
+  +Widget build()
+  +Widget form()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerState" <|-- "communicator::src::views::add_contact_view.dart::_AddContactViewState"
+
+class "communicator::src::views::navigation_view::list_of_chats_widget.dart::ThreadData" {
+  +Thread thread
+  +Contact? contact
+  +Message? message
+}
+
+"communicator::src::views::navigation_view::list_of_chats_widget.dart::ThreadData" o-- "communicator::src::data_manager.dart::Thread"
+"communicator::src::views::navigation_view::list_of_chats_widget.dart::ThreadData" o-- "communicator::src::data_manager.dart::Contact"
+"communicator::src::views::navigation_view::list_of_chats_widget.dart::ThreadData" o-- "communicator::src::data_manager.dart::Message"
+
+class "communicator::src::views::navigation_view::list_of_chats_widget.dart::ListOfThreadsWidget" {
+  +ConsumerState<ListOfThreadsWidget> createState()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerStatefulWidget" <|-- "communicator::src::views::navigation_view::list_of_chats_widget.dart::ListOfThreadsWidget"
+
+class "communicator::src::views::navigation_view::list_of_chats_widget.dart::_ListOfThreadsWidgetState" {
+  -int _profileDbId
+  -List<ThreadData> _threadDatas
+  -dynamic _initThreadDatasUpdateFinished
+  -List<StreamSubscription<dynamic>> _listeners
+  -Offset _tapPosition
+  +void initState()
+  +void dispose()
+  -void _sortThreads()
+  -dynamic _loadThreadData()
+  -dynamic _updateThreadDatas()
+  +Widget build()
+  -Widget _buildListItem()
+  -void _showContextMenu()
+}
+
+"communicator::src::views::navigation_view::list_of_chats_widget.dart::_ListOfThreadsWidgetState" o-- "dart::ui::Offset"
+"flutter_riverpod::src::consumer.dart::ConsumerState" <|-- "communicator::src::views::navigation_view::list_of_chats_widget.dart::_ListOfThreadsWidgetState"
+
+class "communicator::src::views::navigation_view::navigation_view.dart::NavigationView" {
+  +State<NavigationView> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "communicator::src::views::navigation_view::navigation_view.dart::NavigationView"
+
+class "communicator::src::views::navigation_view::navigation_view.dart::_NavigationViewState" {
+  -ListOfThreadsWidget _listOfThreadsWidget
+  +Widget build()
+}
+
+"communicator::src::views::navigation_view::navigation_view.dart::_NavigationViewState" o-- "communicator::src::views::navigation_view::list_of_chats_widget.dart::ListOfThreadsWidget"
+"flutter::src::widgets::framework.dart::State" <|-- "communicator::src::views::navigation_view::navigation_view.dart::_NavigationViewState"
+
+class "communicator::src::views::navigation_view::side_menu_widget.dart::SideMenuWidget" {
+  +Widget build()
+  +void showPeerId()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerWidget" <|-- "communicator::src::views::navigation_view::side_menu_widget.dart::SideMenuWidget"
+
+class "communicator::src::app_providers.dart::MainScreenState" {
+  -double _screenWidth
+  -bool _isSmallScreen
+  -bool _isMediumScreen
+  -bool _isWideScreen
+  +double screenWidth
+  +bool isSmallScreen
+  +bool isMediumScreen
+  +bool isWideScreen
+}
+
+class "communicator::src::data_manager.dart::DataManager" {
+  {static} -DataManager? _instance
+  {static} -bool _initialized
+  -Completer<void> _initializationCompleter
+  -Database _database
+  -int _backendPort
+  -int _frontendPort
+  -Profile _initialProfile
+  -StreamController<ProfileStreamWrapper> _profileUpdateStreamController
+  -StreamController<ContactStreamWrapper> _contactUpdateStreamController
+  -StreamController<ThreadStreamWrapper> _threadUpdateStreamController
+  -StreamController<MessageStreamWrapper> _messageUpdateStreamController
+  {static} +DataManager instance
+  +dynamic initializationDone
+  +int backendPort
+  +int frontendPort
+  +Profile initialProfile
+  +Stream<ProfileStreamWrapper> profileUpdateStream
+  +Stream<ContactStreamWrapper> contactUpdateStream
+  +Stream<ThreadStreamWrapper> threadUpdateStream
+  +Stream<MessageStreamWrapper> messageUpdateStream
+  -dynamic _initializeInstance()
+  -dynamic _initializeDatabase()
+  -dynamic _initializeBackend()
+  +dynamic listenFrontendServer()
+  +void testUpdateDatabase()
+  +dynamic getProfileByDbId()
+  +dynamic getAllProfiles()
+  +dynamic getContactByDbId()
+  +dynamic getThreadByDbId()
+  +dynamic getThreadsByProfileDbId()
+  +dynamic getAllThreads()
+  +dynamic getThreadByContactDbId()
+  +dynamic getMessageByDbId()
+  +dynamic getMessagesForTimestamp()
+  +dynamic getMessagesAfterTimestamp()
+  +dynamic sendJsonGetRequest()
+  +dynamic sendJsonPostRequest()
+  +dynamic addConnection()
+  +dynamic createProfile()
+  +dynamic addContact()
+  +dynamic removeThread()
+  +dynamic sendMessage()
+  +dynamic removeAllMessagesForThread()
+  +dynamic removeMessage()
+  +dynamic handleBackendRequests()
+  +dynamic handleReceiveMessage()
+  +void handleMessageSeen()
+  +void handleMessageReceived()
+  +void handleNewContactRequest()
+}
+
+"communicator::src::data_manager.dart::DataManager" o-- "communicator::src::data_manager.dart::DataManager"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::Completer<void>"
+"communicator::src::data_manager.dart::DataManager" o-- "sqflite_common::sqlite_api.dart::Database"
+"communicator::src::data_manager.dart::DataManager" o-- "communicator::src::data_manager.dart::Profile"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::StreamController<ProfileStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::StreamController<ContactStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::StreamController<ThreadStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::StreamController<MessageStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::Stream<ProfileStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::Stream<ContactStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::Stream<ThreadStreamWrapper>"
+"communicator::src::data_manager.dart::DataManager" o-- "dart::async::Stream<MessageStreamWrapper>"
+
+class "communicator::src::data_manager.dart::Profile" {
+  +int dbId
+  +String peerId
+  +String privateKey
+  +String? avatar
+  +String name
+  {static} -Map<int, WeakReference<Profile>> _profiles
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::ProfileStreamWrapper" {
+  +int dbId
+  +Profile? profile
+}
+
+"communicator::src::data_manager.dart::ProfileStreamWrapper" o-- "communicator::src::data_manager.dart::Profile"
+
+class "communicator::src::data_manager.dart::Contact" {
+  +int dbId
+  +String peerId
+  +String? avatar
+  +String name
+  {static} -Map<int, WeakReference<Contact>> _contacts
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::ContactStreamWrapper" {
+  +int dbId
+  +Contact? contact
+}
+
+"communicator::src::data_manager.dart::ContactStreamWrapper" o-- "communicator::src::data_manager.dart::Contact"
+
+class "communicator::src::data_manager.dart::Thread" {
+  +int dbId
+  +int profileDbId
+  +int contactDbId
+  +int lastUpdate
+  +int? lastMessageDbId
+  +int newMessagesCount
+  +int? firstUnseenMessageByContactDbId
+  +int? firstNewMessageDbId
+  {static} -Map<int, WeakReference<Thread>> _threads
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::ThreadStreamWrapper" {
+  +int dbId
+  +Thread? thread
+}
+
+"communicator::src::data_manager.dart::ThreadStreamWrapper" o-- "communicator::src::data_manager.dart::Thread"
+
+class "communicator::src::data_manager.dart::Message" {
+  +int dbId
+  +int threadDbId
+  +int? senderDbId
+  +int creationTimestamp
+  +String type
+  +String? file
+  +String? text
+  +bool? markdown
+  {static} -Map<int, WeakReference<Message>> _messages
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::MessageStreamWrapper" {
+  +int dbId
+  +Message? message
+}
+
+"communicator::src::data_manager.dart::MessageStreamWrapper" o-- "communicator::src::data_manager.dart::Message"
+
+
+@enduml

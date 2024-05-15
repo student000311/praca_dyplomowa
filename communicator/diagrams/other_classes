@@ -1,0 +1,47 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+class "communicator::src::app.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerWidget" <|-- "communicator::src::app.dart::MyApp"
+
+class "communicator::src::screens::main_screen.dart::MainScreen" {
+  +ConsumerState<MainScreen> createState()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerStatefulWidget" <|-- "communicator::src::screens::main_screen.dart::MainScreen"
+
+class "communicator::src::screens::main_screen.dart::_MainScreenState" {
+  -bool _firstBuildWasInitialized
+  -NavigationView _navigationView
+  -ChatView _chatView
+  +void initState()
+  +void dispose()
+  +void didChangeMetrics()
+  +void updateMainScreenState()
+  +Widget build()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerState" <|-- "communicator::src::screens::main_screen.dart::_MainScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "communicator::src::screens::main_screen.dart::_MainScreenState"
+
+
+
+
+class "communicator::src::app_providers.dart::MainScreenState" {
+  -double _screenWidth
+  -bool _isSmallScreen
+  -bool _isMediumScreen
+  -bool _isWideScreen
+  +double screenWidth
+  +bool isSmallScreen
+  +bool isMediumScreen
+  +bool isWideScreen
+}
+
+
+
+@enduml

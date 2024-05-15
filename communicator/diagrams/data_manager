@@ -1,0 +1,134 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+class "communicator::src::data_manager.dart::DataManager" {
+  {static} -DataManager? _instance
+  {static} -bool _initialized
+  -Completer<void> _initializationCompleter
+  -Database _database
+  -int _backendPort
+  -int _frontendPort
+  -Profile _initialProfile
+  -StreamController<ProfileStreamWrapper> _profileUpdateStreamController
+  -StreamController<ContactStreamWrapper> _contactUpdateStreamController
+  -StreamController<ThreadStreamWrapper> _threadUpdateStreamController
+  -StreamController<MessageStreamWrapper> _messageUpdateStreamController
+  {static} +DataManager instance
+  +dynamic initializationDone
+  +int backendPort
+  +int frontendPort
+  +Profile initialProfile
+  +Stream<ProfileStreamWrapper> profileUpdateStream
+  +Stream<ContactStreamWrapper> contactUpdateStream
+  +Stream<ThreadStreamWrapper> threadUpdateStream
+  +Stream<MessageStreamWrapper> messageUpdateStream
+  -dynamic _initializeInstance()
+  -dynamic _initializeDatabase()
+  -dynamic _initializeBackend()
+  +dynamic listenFrontendServer()
+  +void testUpdateDatabase()
+  +dynamic getProfileByDbId()
+  +dynamic getAllProfiles()
+  +dynamic getContactByDbId()
+  +dynamic getThreadByDbId()
+  +dynamic getThreadsByProfileDbId()
+  +dynamic getAllThreads()
+  +dynamic getThreadByContactDbId()
+  +dynamic getMessageByDbId()
+  +dynamic getMessagesForTimestamp()
+  +dynamic getMessagesAfterTimestamp()
+  +dynamic sendJsonGetRequest()
+  +dynamic sendJsonPostRequest()
+  +dynamic addConnection()
+  +dynamic createProfile()
+  +dynamic addContact()
+  +dynamic removeThread()
+  +dynamic sendMessage()
+  +dynamic removeAllMessagesForThread()
+  +dynamic removeMessage()
+  +dynamic handleBackendRequests()
+  +dynamic handleReceiveMessage()
+  +void handleMessageSeen()
+  +void handleMessageReceived()
+  +void handleNewContactRequest()
+}
+
+"communicator::src::data_manager.dart::DataManager" o-- "communicator::src::data_manager.dart::DataManager"
+"communicator::src::data_manager.dart::DataManager" o-- "communicator::src::data_manager.dart::Profile"
+
+class "communicator::src::data_manager.dart::Profile" {
+  +int dbId
+  +String peerId
+  +String privateKey
+  +String? avatar
+  +String name
+  {static} -Map<int, WeakReference<Profile>> _profiles
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::ProfileStreamWrapper" {
+  +int dbId
+  +Profile? profile
+}
+
+"communicator::src::data_manager.dart::ProfileStreamWrapper" o-- "communicator::src::data_manager.dart::Profile"
+
+class "communicator::src::data_manager.dart::Contact" {
+  +int dbId
+  +String peerId
+  +String? avatar
+  +String name
+  {static} -Map<int, WeakReference<Contact>> _contacts
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::ContactStreamWrapper" {
+  +int dbId
+  +Contact? contact
+}
+
+"communicator::src::data_manager.dart::ContactStreamWrapper" o-- "communicator::src::data_manager.dart::Contact"
+
+class "communicator::src::data_manager.dart::Thread" {
+  +int dbId
+  +int profileDbId
+  +int contactDbId
+  +int lastUpdate
+  +int? lastMessageDbId
+  +int newMessagesCount
+  +int? firstUnseenMessageByContactDbId
+  +int? firstNewMessageDbId
+  {static} -Map<int, WeakReference<Thread>> _threads
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::ThreadStreamWrapper" {
+  +int dbId
+  +Thread? thread
+}
+
+"communicator::src::data_manager.dart::ThreadStreamWrapper" o-- "communicator::src::data_manager.dart::Thread"
+
+class "communicator::src::data_manager.dart::Message" {
+  +int dbId
+  +int threadDbId
+  +int? senderDbId
+  +int creationTimestamp
+  +String type
+  +String? file
+  +String? text
+  +bool? markdown
+  {static} -Map<int, WeakReference<Message>> _messages
+  +Map<String, dynamic> toJson()
+}
+
+class "communicator::src::data_manager.dart::MessageStreamWrapper" {
+  +int dbId
+  +Message? message
+}
+
+"communicator::src::data_manager.dart::MessageStreamWrapper" o-- "communicator::src::data_manager.dart::Message"
+
+
+@enduml

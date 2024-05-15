@@ -1,0 +1,73 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+
+class "communicator::src::views::chat_view::chat_view.dart::ChatView" {
+  +Thread? thread
+  +State<ChatView> createState()
+}
+
+
+class "communicator::src::views::chat_view::chat_view.dart::_ChatViewState" {
+  +ChatBarWidget chatBarWidget
+  +ChatHistoryWidget chatHistoryWidget
+  +ChatInputPanelWidget chatInputPanelWidget
+  +void initState()
+  +Widget build()
+}
+
+"communicator::src::views::chat_view::chat_view.dart::_ChatViewState" o-- "communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget"
+"communicator::src::views::chat_view::chat_view.dart::_ChatViewState" o-- "communicator::src::views::chat_view::chat_history_widget.dart::ChatHistoryWidget"
+"communicator::src::views::chat_view::chat_view.dart::_ChatViewState" o-- "communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget"
+
+class "communicator::src::views::chat_view::chat_bar_widget.dart::ChatBarWidget" {
+  +Thread thread
+  +Size preferredSize
+  +ConsumerState<ChatBarWidget> createState()
+}
+
+
+class "communicator::src::views::chat_view::chat_bar_widget.dart::_ChatBarWidgetState" {
+  -Contact? _contact
+  -List<StreamSubscription<dynamic>> _listeners
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+
+class "communicator::src::views::chat_view::chat_input_panel_widget.dart::ChatInputPanelWidget" {
+  +Thread thread
+  -TextEditingController _textEditingController
+  +Widget build()
+  -void _sendMessage()
+}
+
+class "communicator::src::views::chat_view::chat_history_widget.dart::ChatHistoryWidget" {
+  +Thread thread
+  +State<ChatHistoryWidget> createState()
+}
+
+class "communicator::src::views::chat_view::chat_history_widget.dart::_ChatHistoryWidgetState" {
+  -List<Message> _messages
+  {static} -int _uploadedMessagesCountLimit
+  {static} -int _perUpdateMessageCount
+  -List<StreamSubscription<dynamic>> _listeners
+  -ScrollController _scrollController
+  -Offset _tapPosition
+  +void initState()
+  +void dispose()
+  -void _scrollListener()
+  -dynamic _uploadInitialMessages()
+  -void _cleanUpMessages()
+  -dynamic _uploadMessages()
+  -dynamic _updateListView()
+  +Widget build()
+  -Widget _chatBubble()
+  -void _showContextMenu()
+}
+
+
+
+@enduml

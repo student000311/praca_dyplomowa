@@ -1,0 +1,57 @@
+@startuml
+left to right direction
+package "main.go" {
+    class CommunicatorHost {
+        -sync.Mutex
+        -ProfileDbId int
+        -ProfilePrivateKey string
+        -Host *rhost.RoutedHost
+        -CommunicatorStreams map[int]*CommunicatorStream
+    }
+
+    class CommunicatorStream {
+        -sync.Mutex
+        -ContactDbId int
+        -ContactPeerId string
+        -Stream network.Stream
+    }
+
+    class Message {
+        -CreationTimestamp int
+        -Type string
+        -File string
+        -Text string
+        -Markdown bool
+    }
+
+    class Addressing {
+        -SenderDbId int
+        -ReceiverDbId int
+    }
+
+    class main {
+        -backendPort *int
+        -frontendPort *int
+        +makeRoutedHost(privateKey crypto.PrivKey) (*rhost.RoutedHost, error)
+        -IPFS_PEERS []peer.AddrInfo
+        +convertPeers(peers []string) []peer.AddrInfo
+        +bootstrapConnect(ctx context.Context, ph host.Host, peers []peer.AddrInfo) error
+        +handleStream(stream network.Stream)
+        +readData(stream *network.Stream)
+        +getNewKeysAndPeerId(w http.ResponseWriter, r *http.Request)
+        +addConnection(w http.ResponseWriter, r *http.Request)
+        +removeConnection(w http.ResponseWriter, r *http.Request)
+        +sendMessage(w http.ResponseWriter, r *http.Request)
+        +receiveMessage(streamPtr *network.Stream, message Message)
+    }
+}
+
+package "useful_methods.go" {
+    class useful_methods {
+        +_generatePrivateKey() crypto.PrivKey
+        +_getPubKey(privKey crypto.PrivKey) crypto.PubKey
+        +_getID(pubKey crypto.PubKey) peer.ID
+    }
+}
+
+@enduml

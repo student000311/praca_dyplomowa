@@ -1,0 +1,49 @@
+@startuml
+title Message received sequence
+
+actor Contact
+
+box "Backend" #LightGreen
+participant Main
+participant DataManager
+end box
+
+box "Frontend" #LightBlue
+participant DataManager
+participant Widget
+end box
+
+database Database
+
+== Request handling ==
+
+Contact -> Main: Send message\n(libp2p)
+activate Main
+Main -> DataManager: Pass message\n(Rest API)
+deactivate Main
+group process income
+    activate DataManager
+    DataManager -> Database: Update data
+    deactivate DataManager
+    activate Database
+    Database --> DataManager: Confirm update
+    deactivate Database
+    activate DataManager
+    DataManager ->]: Add data to stream streams
+    deactivate DataManager
+    ||15||
+end
+
+== GUI actualization ==
+
+Widget <-]: listen streams
+activate Widget
+
+alt Satisfy requirements?
+    Widget -> Widget: Update 
+    deactivate Widget
+else Else
+    Widget ->x]: Ignore
+end
+ 
+@enduml

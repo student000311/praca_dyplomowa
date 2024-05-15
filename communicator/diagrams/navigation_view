@@ -1,0 +1,75 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+
+class "communicator::src::views::add_contact_view.dart::AddContactView" {
+  +ConsumerState<AddContactView> createState()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerStatefulWidget" <|-- "communicator::src::views::add_contact_view.dart::AddContactView"
+
+class "communicator::src::views::add_contact_view.dart::_AddContactViewState" {
+  -String _name
+  -String _peerId
+  -String? _nameError
+  -String? _peerIdError
+  -void _cancel()
+  -void _add()
+  +Widget build()
+  +Widget form()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerState" <|-- "communicator::src::views::add_contact_view.dart::_AddContactViewState"
+
+
+
+
+
+class "communicator::src::views::navigation_view::list_of_chats_widget.dart::ThreadData" {
+  +Thread thread
+  +Contact? contact
+  +Message? message
+}
+
+
+class "communicator::src::views::navigation_view::list_of_chats_widget.dart::ListOfThreadsWidget" {
+  +ConsumerState<ListOfThreadsWidget> createState()
+}
+
+class "communicator::src::views::navigation_view::list_of_chats_widget.dart::_ListOfThreadsWidgetState" {
+  -int _profileDbId
+  -List<ThreadData> _threadDatas
+  -dynamic _initThreadDatasUpdateFinished
+  -List<StreamSubscription<dynamic>> _listeners
+  -Offset _tapPosition
+  +void initState()
+  +void dispose()
+  -void _sortThreads()
+  -dynamic _loadThreadData()
+  -dynamic _updateThreadDatas()
+  +Widget build()
+  -Widget _buildListItem()
+  -void _showContextMenu()
+}
+
+class "communicator::src::views::navigation_view::navigation_view.dart::NavigationView" {
+  +State<NavigationView> createState()
+}
+
+class "communicator::src::views::navigation_view::navigation_view.dart::_NavigationViewState" {
+  -ListOfThreadsWidget _listOfThreadsWidget
+  +Widget build()
+}
+
+"communicator::src::views::navigation_view::navigation_view.dart::_NavigationViewState" o-- "communicator::src::views::navigation_view::list_of_chats_widget.dart::ListOfThreadsWidget"
+
+class "communicator::src::views::navigation_view::side_menu_widget.dart::SideMenuWidget" {
+  +Widget build()
+  +void showPeerId()
+}
+
+"flutter_riverpod::src::consumer.dart::ConsumerWidget" <|-- "communicator::src::views::navigation_view::side_menu_widget.dart::SideMenuWidget"
+
+
+@enduml
